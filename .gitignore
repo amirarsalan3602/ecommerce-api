@@ -983,6 +983,6 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
 
 .templates
-
+ db.sqlite3
 .idea
 
