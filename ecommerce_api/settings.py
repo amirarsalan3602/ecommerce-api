@@ -38,9 +38,10 @@ INSTALLED_APPS = [
 
     # internal apps
     'accounts.apps.AccountsConfig',
-    'products.apps.AppConfig',
+    'products.apps.ProductsConfig',
     # third party apps
     'rest_framework',
+    'mptt',
 ]
 
 MIDDLEWARE = [
