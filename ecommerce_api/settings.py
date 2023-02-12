@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # internal apps
     'accounts.apps.AccountsConfig',
     'products.apps.ProductsConfig',
+    'admin_site.apps.AdminSiteConfig',
     # third party apps
     'rest_framework',
     'mptt',
