@@ -3,6 +3,7 @@ from products.models import Genre
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
+
 class CreationCategoriesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Genre
@@ -18,7 +19,7 @@ class CreationSubCategoriesSerializers(serializers.Serializer):
 
     def validate_id(self, value):
         try:
-            data = get_object_or_404(Genre,id=value)
+            data = get_object_or_404(Genre, id=value)
             if str(type(data.parent)) == "<class 'NoneType'>":
                 return value
         except Genre.DoesNotExist:
@@ -28,3 +29,4 @@ class CreationSubCategoriesSerializers(serializers.Serializer):
         if Genre.objects.filter(name=value).exists():
             raise serializers.ValidationError(" This subcategory already exists ! ")
         return value
+

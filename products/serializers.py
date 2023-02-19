@@ -1,6 +1,5 @@
 from rest_framework import serializers
-
-from products.models import ProductModel, Genre
+from products.models import ProductModel
 
 
 class ProductsSerializers(serializers.ModelSerializer):
@@ -12,15 +11,7 @@ class ProductsSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CategoriesSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Genre
-        fields = ['id','name', 'parent']
-        # fields = "__all__"
-
-
-# class SubCategoriesSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Genre
-#         fields = ['id']
-
+class CategoriesSerializers(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    parent = serializers.CharField()

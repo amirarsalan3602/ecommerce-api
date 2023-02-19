@@ -7,9 +7,15 @@ from accounts.models import User
 class Genre(MPTTModel):
     name = models.CharField(max_length=128, unique=True)
     parent = TreeForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children')
+    deactivate = models.BooleanField(default=False)
 
     class MPTTMeta:
         order_insertion_by = ['name']
+
+    def display(self):
+        if self.deactivate:
+            return None
+        return self.deactivate
 
     def __str__(self):
         return f'{self.name}'
