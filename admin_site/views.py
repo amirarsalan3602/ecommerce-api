@@ -1,11 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
 from products.models import Genre
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from admin_site import serialisers
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from django.core import exceptions
 
 
 class CreationCategories(APIView):
@@ -24,7 +24,7 @@ class CreationSubCategories(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def post(self, request):
-        srz_data = serialisers.CreationSubCategoriesSerializers(data=request.data)
+        srz_data = serialisers.CreationSubCategoriesSerializers(instance=request.data)
         if srz_data.is_valid():
             parent = get_object_or_404(Genre, id=srz_data.validated_data['id'])
             Genre.objects.create(name=srz_data.validated_data['name'], parent=parent)
@@ -79,8 +79,21 @@ class DeleteSubCategory(APIView):
             obj.deactivate = True
             obj.save()
             if obj.parent == None:
-                 return Response({'message': 'The selected object is a category! You must select a subcategory'},
-                            status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'The selected object is a category! You must select a subcategory'},
+                                status=status.HTTP_400_BAD_REQUEST)
             return Response({'message': 'Delete Category successfully !'}, status=status.HTTP_200_OK)
         except:
             return Response({'message': 'Your Category Was Not Found !!'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreationProduct(APIView):
+    def post(self, request):
+        srz_data = serialisers.CreationProductSerializers(data=request.data)
+        if srz_data.is_valid():
+            srz_data.create(srz_data.validated_data)
+            return Response({'message': "Your product has been added !!"}, status=status.HTTP_201_CREATED)
+        return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+

@@ -9,4 +9,7 @@ urlpatterns = [
     path("delete_subcategory/<int:id>/", views.DeleteSubCategory.as_view(), name='delete_subcategory'),
     path("update_category/<int:id>/", views.UpdateCategory.as_view(), name='update_category'),
     path("update_subcategory/<int:id>/", views.UpdateSubCategory.as_view(), name='update_subcategory'),
+    path("add_product/", views.CreationProduct.as_view(), name='add_product'),
 ]
+
+
