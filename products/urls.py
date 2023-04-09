@@ -14,5 +14,7 @@ urlpatterns = [
     path('add_comment/<int:id>/', views.CreationCommentView.as_view(), name='add_comment'),
     # creation a comment by ID product
     path('add_reply/', views.CreationReplyView.as_view(), name='add_reply'),
-    # creation a reply by ID comment
+    # upload the product image
+    path('upload_product_image/', views.UploadProductImageView.as_view(), name='upload_product_image'),
+
 ]

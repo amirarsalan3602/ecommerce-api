@@ -32,6 +32,11 @@ class ProductModel(models.Model):
         return f'{self.id} - {self.title} - {self.category}'
 
 
+class ProductImagesModel(models.Model):
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='product')
+
+
 class CommentProductModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name='pcomment')
@@ -42,3 +47,5 @@ class CommentProductModel(models.Model):
 
     def __str__(self):
         return self.comment
+
+

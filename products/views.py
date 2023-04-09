@@ -1,10 +1,11 @@
 from rest_framework.views import APIView
-from .models import ProductModel, Genre, CommentProductModel
+from .models import ProductModel, Genre, CommentProductModel, ProductImagesModel
 from .serializers import ProductsSerializers, CategoriesSerializers, CommentProductSerializers, \
-    CreationCommentSerializers, CreationReplySerializers
+    CreationCommentSerializers, CreationReplySerializers, UploadProductImageSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from celery import shared_task
 
 
 # List of all product
@@ -60,11 +61,18 @@ class CreationCommentView(APIView):
 
 class CreationReplyView(APIView):
     def post(self, request):
-        # comment = get_object_or_404(CommentProductModel, id=request.POST['comment_id'])
         srz_data = CreationReplySerializers(data=request.data)
         if srz_data.is_valid():
             srz_data.validated_data['user'] = request.user
             srz_data.create(srz_data.validated_data)
             return Response(srz_data.data, status=status.HTTP_201_CREATED)
         return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
-# comment.rcomment.create(is_reply=True, comment=request.POST, product=comment.product, user=request.user)
+
+
+class UploadProductImageView(APIView):
+    def post(self, request):
+        srz_data = UploadProductImageSerializer(data=request.data)
+        if srz_data.is_valid():
+            srz_data.create(srz_data.validated_data)
+            return Response(data={"the image product created !"})
+        return Response(data=srz_data.errors, status=status.HTTP_404_NOT_FOUND)

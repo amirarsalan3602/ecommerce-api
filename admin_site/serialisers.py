@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from accounts.models import User
-from products.models import Genre, ProductModel,CommentProductModel
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from products.models import Genre, ProductModel
+
 from django.shortcuts import get_object_or_404
 
 

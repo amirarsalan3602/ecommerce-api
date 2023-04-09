@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     # third party apps
     'rest_framework',
     'mptt',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -152,7 +154,7 @@ CACHES = {
 }
 # config jwt
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=50),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
@@ -183,3 +185,13 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+# ARVAN Storage confiders
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_ACCESS_KEY_ID = '127818df-bd8c-41f7-bc00-e2d965a62e7b'
+AWS_S3_SECRET_ACCESS_KEY = '773eeacdb3c905906e2b4e1e43655fda39b55a48'
+AWS_S3_ENDPOINT_URL = 'https://s3.ir-thr-at1.arvanstorage.ir/'
+AWS_STORAGE_BUCKET_NAME = 'django-testing'
+AWS_SERVICE_NAME = 's3'
+AWS_S3_FILE_OVERWRITE = False

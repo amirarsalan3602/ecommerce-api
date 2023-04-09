@@ -11,5 +11,3 @@ urlpatterns = [
     path("update_subcategory/<int:id>/", views.UpdateSubCategory.as_view(), name='update_subcategory'),
     path("add_product/", views.CreationProduct.as_view(), name='add_product'),
 ]
-
-
