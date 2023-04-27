@@ -10,4 +10,8 @@ urlpatterns = [
     path("update_category/<int:id>/", views.UpdateCategory.as_view(), name='update_category'),
     path("update_subcategory/<int:id>/", views.UpdateSubCategory.as_view(), name='update_subcategory'),
     path("add_product/", views.CreationProduct.as_view(), name='add_product'),
+    # upload the product image
+    path('upload_product_image/', views.UploadProductImageView.as_view(), name='upload_product_image'),
+    path('discount/', views.CreationDiscountView.as_view(), name='Discount'),
+
 ]

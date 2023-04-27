@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from products.models import Genre
+from products.models import Genre, DiscountModel
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from admin_site import serialisers
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+
+from products.serializers import UploadProductImageSerializer
 from .tasks import all_bucket_objects_task
 from rest_framework import viewsets
 
@@ -94,4 +96,23 @@ class CreationProduct(APIView):
         if srz_data.is_valid():
             srz_data.create(srz_data.validated_data)
             return Response({'message': "Your product has been added !!"}, status=status.HTTP_201_CREATED)
+        return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UploadProductImageView(APIView):
+    def post(self, request):
+        srz_data = UploadProductImageSerializer(data=request.data)
+        if srz_data.is_valid():
+            srz_data.create(srz_data.validated_data)
+            return Response(data={"the image product created !"})
+        return Response(data=srz_data.errors, status=status.HTTP_404_NOT_FOUND)
+
+
+class CreationDiscountView(APIView):
+    def post(self, request):
+        srz_data = serialisers.CreationDiscountSerializers(data=request.data)
+        if srz_data.is_valid():
+            srz_data.create(srz_data.validated_data)
+            return Response({'message': 'Your discount has been successfully applied to the product.'},
+                            status=status.HTTP_201_CREATED)
         return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)

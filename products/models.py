@@ -1,6 +1,6 @@
 from django.db import models
 from mptt.models import TreeForeignKey, MPTTModel
-
+from django.core.validators import MinValueValidator, MaxValueValidator
 from accounts.models import User
 
 
@@ -27,6 +27,9 @@ class ProductModel(models.Model):
     title = models.CharField(max_length=256)
     description = models.TextField()
     price = models.PositiveIntegerField()
+    has_discount = models.BooleanField(default=False)
+    discount = models.ForeignKey("DiscountModel", on_delete=models.CASCADE, blank=True, null=True,
+                                 related_name='discount')
 
     def __str__(self):
         return f'{self.id} - {self.title} - {self.category}'
@@ -49,3 +52,9 @@ class CommentProductModel(models.Model):
         return self.comment
 
 
+class DiscountModel(models.Model):
+    product = models.ForeignKey(ProductModel, on_delete=models.SET_NULL, null=True, related_name='product')
+    percent = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(99)], blank=True, null=True)
+    endprice = models.IntegerField(blank=True, null=True)
+    creation = models.DateTimeField(auto_now_add=True)
+    expired = models.DateTimeField(blank=True, null=True)

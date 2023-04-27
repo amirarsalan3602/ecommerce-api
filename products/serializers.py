@@ -1,33 +1,47 @@
-from abc import ABC
-
 from rest_framework import serializers
-from products.models import ProductModel, CommentProductModel,ProductImagesModel
+from products.models import ProductModel, CommentProductModel, ProductImagesModel, Genre, DiscountModel
 from django.shortcuts import get_object_or_404
 from rest_framework.serializers import SerializerMethodField
 
 
-class UploadProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImagesModel
-        fields = ['image']
+class UploadProductImageSerializer(serializers.Serializer):
+    product = serializers.IntegerField()
+    image = serializers.ImageField()
+
+    def create(self, validated_data):
+        product = get_object_or_404(ProductModel, id=validated_data['product'])
+        return ProductImagesModel.objects.create(product=product, image=validated_data['image'])
 
 
 class ProductsSerializers(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
     category = serializers.StringRelatedField(read_only=True, many=True)
     images = SerializerMethodField()
+    discount = SerializerMethodField()
+
     class Meta:
         model = ProductModel
         fields = '__all__'
 
-    def get_images(self,obj):
-        srz_images = UploadProductImageSerializer(instance=obj.images.all(),many=True)
-        return srz_images.data
+    def get_images(self, obj):
+        return UploadProductImageSerializer(instance=obj.images.all(), many=True).data
 
-class CategoriesSerializers(serializers.Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField()
-    parent = serializers.CharField()
+    def get_discount(self, obj):
+        if obj.has_discount:
+            return DiscountSerializer(instance=DiscountModel.objects.get(id=obj.discount.id)).data
+        else:
+            return None
+
+
+class CategoriesSerializers(serializers.ModelSerializer):
+    parent = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Genre
+        fields = ['id', 'name', 'parent']
+
+    def get_parent(self, obj):
+        return CategoriesSerializers(instance=obj.children.all(), many=True).data
 
 
 class CommentProductSerializers(serializers.ModelSerializer):
@@ -76,5 +90,7 @@ class CreationReplySerializers(serializers.ModelSerializer):
                                        user=validated_data['user'])
 
 
-
-
+class DiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DiscountModel
+        fields = ['expired', 'endprice', 'percent']
