@@ -6,13 +6,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from celery import shared_task
+from rest_framework import viewsets
 
 
 # List of all product
-class ProductView(APIView):
-    def get(self, request):
-        products = ProductModel.objects.all()
-        srz_data = ProductsSerializers(instance=products, many=True).data
+class ProductViewSet(viewsets.ViewSet):
+    queryset = ProductModel.objects.all()
+
+    def list(self, request):
+        srz_data = ProductsSerializers(instance=self.queryset, many=True).data
         return Response(data=srz_data, status=status.HTTP_200_OK)
 
 
@@ -34,7 +36,6 @@ class CategoriesView(APIView):
 #             srz_data = CategoriesSerializers(instance=sub_cat, many=True)
 #             return Response(data=srz_data.data, status=status.HTTP_200_OK)
 #         return Response(data={})
-
 
 class CommentProductView(APIView):
 
@@ -67,9 +68,3 @@ class CreationReplyView(APIView):
             srz_data.create(srz_data.validated_data)
             return Response(srz_data.data, status=status.HTTP_201_CREATED)
         return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-

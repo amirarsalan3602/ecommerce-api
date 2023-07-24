@@ -116,3 +116,4 @@ class CreationDiscountView(APIView):
             return Response({'message': 'Your discount has been successfully applied to the product.'},
                             status=status.HTTP_201_CREATED)
         return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
+

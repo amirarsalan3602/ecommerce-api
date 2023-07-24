@@ -6,19 +6,20 @@ from .serializers import UserSerialzier, UserVerifySerializer
 from .models import User
 from random import randint
 from django.core.cache import cache
+from rest_framework import viewsets
 
 
 class LoginView(APIView):
     def post(self, request):
         srz_data = UserSerialzier(data=request.data)
-        if srz_data.is_valid():  # shouldnt check the phone is unique
+        if srz_data.is_valid():  # shouldn't check the phone is unique
             the_code = randint(1, 9)
             phone = srz_data.validated_data["phone_number"]
             # RGScode.objects.create(
             #     phone_number=phone, code=the_code)
             cache.set(the_code, phone)
             print(the_code)
-            # if the session didnt work in DRF get the phone again in user verify view !
+            # if the session didn't work in DRF get the phone again in user verify view !
             return Response(data=srz_data.data)
         return Response(data=srz_data.errors)
 

@@ -66,7 +66,7 @@ class CommentProductSerializers(serializers.ModelSerializer):
 class CreationCommentSerializers(serializers.ModelSerializer):
     class Meta:
         model = CommentProductModel
-        fields = ['id', 'comment']
+        fields = ['comment']
         extra_kwargs = {
             "comment": {'required': True},
         }

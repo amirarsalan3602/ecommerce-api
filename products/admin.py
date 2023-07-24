@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Genre,oductM Prodel, CommentProductModel, ProductImagesModel,DiscountModel
+from .models import Genre, CommentProductModel, ProductImagesModel, DiscountModel, ProductModel
 from mptt.admin import MPTTModelAdmin
 
 admin.site.register(Genre, MPTTModelAdmin)
